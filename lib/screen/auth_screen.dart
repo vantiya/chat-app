@@ -1,9 +1,9 @@
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_chat_app/widgets/auth/auth_form.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthScreen extends StatefulWidget {
   @override
@@ -13,7 +13,8 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final _auth = FirebaseAuth.instance;
   var _isLoading = false;
-  void _doAuthorization (String email, String userPass, String userName, bool islogin) async {
+  void _doAuthorization(
+      String email, String userPass, String userName, bool islogin) async {
     UserCredential userCredential;
     try {
       setState(() {
@@ -27,13 +28,13 @@ class _AuthScreenState extends State<AuthScreen> {
             email: email, password: userPass);
       }
 
-      await FirebaseFirestore.instance.collection('users').doc(userCredential.user.uid).set({
-        'username': userName,
-        'email': email
-      });
-    } on PlatformException catch ( e ) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user.uid)
+          .set({'username': userName, 'email': email});
+    } on PlatformException catch (e) {
       var message = "An error occured while login";
-      if( e.message != null ) {
+      if (e.message != null) {
         message = e.message;
       }
       ScaffoldMessenger.of(context).showSnackBar(
@@ -45,13 +46,14 @@ class _AuthScreenState extends State<AuthScreen> {
       setState(() {
         _isLoading = false;
       });
-    } catch ( e ) {
+    } catch (e) {
       print(e);
       setState(() {
         _isLoading = false;
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

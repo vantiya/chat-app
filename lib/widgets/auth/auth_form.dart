@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthForm extends StatefulWidget {
-  AuthForm( this.submitFn, this.isLoading );
+  AuthForm(this.submitFn, this.isLoading);
 
   final bool isLoading;
-  final void Function(String email, String pass, String uname, bool isLogin) submitFn;
+  final void Function(String email, String pass, String uname, bool isLogin)
+      submitFn;
 
   @override
   _AuthFormState createState() => _AuthFormState();
@@ -21,9 +22,10 @@ class _AuthFormState extends State<AuthForm> {
   void _doSubmit() {
     final isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
-    if( isValid ) {
+    if (isValid) {
       _formKey.currentState.save();
-      widget.submitFn(_userEmail.trim(), _userPass.trim(), _userName.trim(), _isLogin);
+      widget.submitFn(
+          _userEmail.trim(), _userPass.trim(), _userName.trim(), _isLogin);
     }
   }
 
@@ -43,60 +45,59 @@ class _AuthFormState extends State<AuthForm> {
                   TextFormField(
                     key: ValueKey('Email'),
                     validator: (value) {
-                      if( value.isEmpty || !value.contains('@') ) {
+                      if (value.isEmpty || !value.contains('@')) {
                         return 'Please Enter Valid Email address';
                       }
                       return null;
                     },
                     keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      labelText: 'Email'
-                    ),
+                    decoration: InputDecoration(labelText: 'Email'),
                     onSaved: (val) {
                       _userEmail = val;
                     },
                   ),
-                  if( !_isLogin )
-                  TextFormField(
-                    key: ValueKey('Username'),
-                    validator: (value) {
-                      if( value.isEmpty ) {
-                        return "Enter Username";
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration( labelText: 'Username'),
-                    onSaved: (val) {
-                      _userName = val;
-                    },
-                  ),
+                  if (!_isLogin)
+                    TextFormField(
+                      key: ValueKey('Username'),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Enter Username";
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(labelText: 'Username'),
+                      onSaved: (val) {
+                        _userName = val;
+                      },
+                    ),
                   TextFormField(
                     key: ValueKey('Userpass'),
                     validator: (value) {
-                      if( value.isEmpty ) {
+                      if (value.isEmpty) {
                         return 'Enter Password';
-                      } else if( value.length < 7 ) {
+                      } else if (value.length < 7) {
                         return 'Password Should be at least 7 Character long.';
                       }
                       return null;
                     },
-                    decoration: InputDecoration( labelText: 'Password'),
+                    decoration: InputDecoration(labelText: 'Password'),
                     obscureText: true,
                     onSaved: (val) {
                       _userPass = val;
                     },
                   ),
-                  SizedBox(height: 12,),
-                  if(widget.isLoading)
-                    CircularProgressIndicator(),
-                  if(!widget.isLoading)
+                  SizedBox(
+                    height: 12,
+                  ),
+                  if (widget.isLoading) CircularProgressIndicator(),
+                  if (!widget.isLoading)
                     RaisedButton(
-                      child: Text( _isLogin ? 'Sign up': 'Login' ),
+                      child: Text(_isLogin ? 'Login' : 'Sign up'),
                       onPressed: _doSubmit,
                     ),
-                  if(!widget.isLoading)
+                  if (!widget.isLoading)
                     FlatButton(
-                      child: Text( _isLogin ? 'Login' : 'Sign up' ),
+                      child: Text(_isLogin ? 'Sign up' : 'Login'),
                       textColor: Theme.of(context).primaryColor,
                       onPressed: () {
                         setState(() {
